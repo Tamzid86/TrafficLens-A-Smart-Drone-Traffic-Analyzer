@@ -88,12 +88,12 @@ Process video asynchronously
 Annotated video
 CSV report
 
-**#ByteTrack Algorithm and Edge case handling:**
+**ByteTrack Algorithm and Edge case handling:**
 The system uses a tracking system, which relies on a detection-to-tracking pipeline. Object detection starts with a YOLO-based model. The system uses ByteTrack-style logic in its tracking layer to maintain identity consistency across multiple frames. Each detected vehicle is assigned a unique track ID, which continues until the object becomes unidentifiable through spatial proximity and motion pattern matching in subsequent frames. The tracker establishes continuous vehicle paths by connecting time-based detections instead of analyzing each detection as a separate event. The system starts counting when a tracked object crosses a virtual counting line but does not count vehicles that appear in multiple frames because it counts each vehicle only one time.
 
 The system prevents double-counting through its persistent track ID system and its counted set mechanism. The system stores a vehicle track ID in memory after it has crossed the counting boundary. The system prevents multiple frame counting of the same vehicle through this method. The tracking logic delivers extra robustness because it enables object identification to persist through temporary occlusions and short detection failures. The tracker uses motion continuity to track a vehicle, which disappears behind another object or loses detection confidence, instead of creating a new ID. The system decreases duplicate entries through this method, which also enhances stability in areas with heavy traffic congestion.
 
-**#Engineering Assumptions**
+**Engineering Assumptions**
 The system development process required engineers to establish multiple fundamental engineering principles which they needed to create a stable operational framework for the system. The system maintains its operation because it accepts only one video stream input which prevents it from working with multiple cameras that need to track different locations. The system requires camera operators to maintain steady camera positions which they must execute through either drone operation or fixed roadside camera usage because the system prohibits any sudden camera movements or zoom operations. The YOLO model used in this research preserves its original pre-trained state because it has not undergone specific regional fine-tuning, which enables the model to accurately identify typical vehicle types. The system uses a Python dictionary to manage job states because it operates entirely in memory without needing a database system, which results in the loss of all processing states whenever the backend system undergoes a restart.
 
 ## Supported Vehicle Classes
